@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — taken from the Figma styles
+   (White, Black shade, Subtext, accent #FB451C, Heading/Subtext type)
+   ------------------------------------------------------------------ */
+@theme {
+  --color-accent: #fb451c;
+  --color-shade: #101010;
+  --color-subtext: #c0c0c0;
+  --color-line: #272727;
+  --color-card-border: #2c2c2c;
+  --color-footer: #141414;
+
+  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-logo: var(--font-arimo), ui-sans-serif, system-ui, sans-serif;
+  --font-inter: var(--font-inter-face), ui-sans-serif, system-ui, sans-serif;
+
+  /* Heading styles use -5% letter-spacing in Figma */
+  --tracking-heading: -0.05em;
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Bricolage is a variable font; Figma uses opsz 14 / wdth 100 */
+  .font-heading {
+    font-variation-settings: "opsz" 14, "wdth" 100;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  section[id] {
+    scroll-margin-top: 24px;
+  }
+}
+
+/* Reveal-on-scroll (see components/ui/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee {
+    animation: none;
+  }
+}
