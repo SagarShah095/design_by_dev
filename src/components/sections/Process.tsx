@@ -72,13 +72,19 @@ export function Process() {
             </div>
             <div className="absolute top-1/2 left-1/2 w-[calc(100%-32px)] max-w-[504px] -translate-x-1/2 -translate-y-1/2 rounded-[8px] border border-white/[0.13] bg-white/10 p-[6px] shadow-[0px_6px_14.1px_0px_rgba(0,0,0,0.25)] backdrop-blur-[10.05px]">
               <div className="relative aspect-[492/274] w-full overflow-hidden rounded-[4px]">
-                <Image
-                  src="/images/process-board.webp"
-                  alt="Strategy and journey-mapping board from a discovery workshop"
-                  fill
-                  sizes="(min-width: 1024px) 492px, 90vw"
-                  className="object-cover"
-                />
+                {process.steps.map((step, i) => (
+                  <Image
+                    key={step.image}
+                    src={step.image}
+                    alt={step.imageAlt}
+                    fill
+                    sizes="(min-width: 1024px) 492px, 90vw"
+                    className={`object-cover transition-opacity duration-500 ease-in-out ${
+                      active === i ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
+                    priority={i === 0}
+                  />
+                ))}
               </div>
             </div>
           </div>

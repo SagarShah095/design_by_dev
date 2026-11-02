@@ -165,6 +165,8 @@ export type ProcessStep = {
   /** colour of the strokes in the SVG file, used to flip it for the active state */
   iconTone: "light" | "dark";
   description?: string;
+  image: string;
+  imageAlt: string;
 };
 
 export const process = {
@@ -178,6 +180,8 @@ export const process = {
       iconTone: "dark",
       description:
         "Discovery & Strategy: We map your exact business goals, target audience, and current revenue bottlenecks.",
+      image: "/images/process-board.webp",
+      imageAlt: "Discovery and strategy journey-mapping board",
     },
     {
       title: "Architecture & Design",
@@ -185,6 +189,8 @@ export const process = {
       iconTone: "light",
       description:
         "We engineer the visual layout and user journey, positioning every element to drive maximum sales.",
+      image: "/images/process-board-2.png",
+      imageAlt: "Architecture and design planning board",
     },
     {
       title: "Development & SEO",
@@ -192,6 +198,8 @@ export const process = {
       iconTone: "light",
       description:
         "We code the custom site for instant load times and integrate foundational search optimization.",
+      image: "/images/process-board-3.png",
+      imageAlt: "Development and SEO implementation board",
     },
     {
       title: "Launch & Handover",
@@ -199,6 +207,8 @@ export const process = {
       iconTone: "light",
       description:
         "We thoroughly test the site, push it live, and provide clear training so you can manage it effortlessly.",
+      image: "/images/process-board-4.png",
+      imageAlt: "Launch and handover analytics board",
     },
   ] satisfies ProcessStep[],
 };

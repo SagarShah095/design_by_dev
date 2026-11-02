@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, type FormEvent } from "react";
+import emailjs from "@emailjs/browser";
 import { contact } from "@/content/site";
 import { PillButton } from "@/components/ui/PillButton";
 import { Reveal } from "@/components/ui/Reveal";
@@ -54,16 +55,57 @@ export function Contact() {
 
     setStatus({ state: "sending" });
     try {
-      const res = await fetch("/api/contact", {
+      const fullMessage = [
+        `Company: ${data.company?.trim() || "Not specified"}`,
+        `Service: ${data.service || "Not specified"}`,
+        `Budget: ${data.budget || "Not specified"}`,
+        "",
+        "Message:",
+        data.message,
+      ].join("\n");
+
+      const templateParams = {
+        name: data.name,
+        email: data.email,
+        company: data.company?.trim() || "Not specified",
+        service: data.service || "Not specified",
+        budget: data.budget || "Not specified",
+        user_message: data.message,
+        message: fullMessage,
+        from_name: data.name,
+        from_email: data.email,
+        reply_to: data.email,
+        user_name: data.name,
+        user_email: data.email,
+      };
+
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_rl57gre",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_woufibe",
+        templateParams,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "FNM21-HuFjR7xUjFe"
+      );
+
+      // Keep recording to background sheet / API endpoint if available without blocking user
+      fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error((await res.json().catch(() => ({})))?.error ?? "Something went wrong.");
+      }).catch(() => {});
+
       form.reset();
       setStatus({ state: "sent", message: "Thanks — your message is on its way. We'll be in touch soon." });
     } catch (err) {
-      setStatus({ state: "error", message: err instanceof Error ? err.message : "Something went wrong." });
+      console.error("[EmailJS] Send error:", err);
+      let errMsg = "Could not send message right now. Please try again.";
+      if (err && typeof err === "object") {
+        if ("text" in err && typeof (err as { text?: unknown }).text === "string") {
+          errMsg = (err as { text: string }).text;
+        } else if (err instanceof Error) {
+          errMsg = err.message;
+        }
+      }
+      setStatus({ state: "error", message: errMsg });
     }
   }
 
